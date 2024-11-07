@@ -1,4 +1,4 @@
-package Input;
+package ProjectFiles.Input;
 
 import java.util.HashMap;
 import java.util.Map;

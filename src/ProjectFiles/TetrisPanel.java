@@ -1,8 +1,8 @@
+package ProjectFiles;
 
-
-import GameFiles.*;
-import Input.KeyBindsManager;
-import Rendering.*;
+import ProjectFiles.GameFiles.*;
+import ProjectFiles.Input.KeyBindsManager;
+import ProjectFiles.Rendering.*;
 import java.awt.*;
 import javax.swing.*;
 

@@ -1,4 +1,4 @@
-package Input;
+package ProjectFiles.Input;
 
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;

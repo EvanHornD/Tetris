@@ -1,4 +1,4 @@
-package Input;
+package ProjectFiles.Input;
 
 import java.awt.event.ActionEvent;
 import javax.swing.*;

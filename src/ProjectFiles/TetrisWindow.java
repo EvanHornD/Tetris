@@ -1,11 +1,11 @@
-
+package ProjectFiles;
 import java.awt.*;
 import javax.swing.JFrame;
 
 public final class TetrisWindow {
         
     private JFrame frame;
-    TetrisPanel panel;
+    public TetrisPanel panel;
 
     public TetrisWindow() {
         initialize();

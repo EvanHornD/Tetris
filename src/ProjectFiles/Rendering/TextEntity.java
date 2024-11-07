@@ -1,4 +1,4 @@
-package Rendering;
+package ProjectFiles.Rendering;
 
 
 import java.awt.Color;
