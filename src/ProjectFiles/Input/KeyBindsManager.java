@@ -10,14 +10,16 @@ public final class KeyBindsManager {
     private MouseInputManager mouse;
 
     public Map<String, String> defaultKeyBoardBindings = new HashMap<>(Map.of(
-        "UP", "Up",
-        "W", "Up",
+        "UP", "Rotate",
+        "W", "Rotate",
         "DOWN", "Down",
         "S", "Down",
         "LEFT", "Left",
         "A", "Left",
         "RIGHT", "Right",
-        "D", "Right"
+        "D", "Right",
+        "Space", "QuickDrop",
+        "Q", "Store"
     ));
 
     public Map<String, String> defaultMouseBindings = new HashMap<>(Map.of(
@@ -25,7 +27,7 @@ public final class KeyBindsManager {
     ));
 
     public Map<String, Integer> keyActions = new HashMap<>(Map.of(
-        "Up", 0,
+        "Rotate", 0,
         "Down", 0,
         "Left", 0,
         "Right", 0,

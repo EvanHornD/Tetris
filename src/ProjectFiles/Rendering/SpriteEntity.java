@@ -18,9 +18,9 @@ public class SpriteEntity extends RenderableEntity {
         return coordinates;
     }
 
-    public void moveText(double x, double y){
-        coordinates[0] += x;
-        coordinates[1] += y;
+    public void moveSprite(double x, double y){
+        coordinates[0] = x;
+        coordinates[1] = y;
     }
 
     @Override

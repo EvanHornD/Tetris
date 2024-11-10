@@ -7,6 +7,7 @@ import ProjectFiles.Rendering.SpriteEntity;
 public class ReferenceFrame extends SpriteEntity{
 
     int TileWidth;
+
     public ReferenceFrame(BufferedImage Sprite, double[] coordinates, int tileWidth){
         super(Sprite, coordinates);
         this.TileWidth = tileWidth;

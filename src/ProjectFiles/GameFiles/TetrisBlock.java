@@ -6,8 +6,19 @@ import ProjectFiles.Rendering.SpriteEntity;
 
 public class TetrisBlock extends SpriteEntity{
 
-    public TetrisBlock(BufferedImage Sprite, ReferenceFrame reference, int[] coords){
+    private ReferenceFrame reference;
+    public TetrisBlock(BufferedImage Sprite, ReferenceFrame reference, int[] coords, int type){
         super(Sprite, reference.getTileCoords(coords));
+        this.reference = reference;
+    }
+
+    public void updateReferenceFrame(ReferenceFrame newFrame){
+        reference = newFrame;
+    }
+
+    public void updateGridCoords(int[] newGridCoords){
+        double[] newCoords = reference.getTileCoords(newGridCoords);
+        moveSprite(newCoords[0], newCoords[1]);
     }
 
     @Override
