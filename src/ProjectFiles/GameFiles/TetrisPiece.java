@@ -113,10 +113,10 @@ public class TetrisPiece extends RenderableEntity{
     }
 
     public void updateReferenceFrame(ReferenceFrame newFrame){
-        for (int i = 0; i < coords.length; i++) {
+        for (int i = 0; i < blocks.length; i++) {
             blocks[i].updateReferenceFrame(newFrame);
-            blocks[i].updateGridCoords(coords);
         }
+        updatepiece(TetrisPieces[type][rotation]);
     }
 
     private void updatepiece(int[][] blockCoords){

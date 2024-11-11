@@ -25,12 +25,15 @@ public final class TetrisPanel extends JPanel {
     static double screenRatio;
     static int frameNumber = 0;
     ShapeEntity backGround = new ShapeEntity(new Color(24,24,24));
-    BufferedImage[] images = new BufferedImage[2]; 
+    BufferedImage[] images = new BufferedImage[3]; 
     static TetrisBoard board;
     static TetrisPiece activePiece;
     static int[] randomBag = TetrisBag;
     static boolean state = true;
     static int pieceMoveTimer = 20;
+    static ReferenceFrame[] nextPiecesGrid;
+    static TetrisPiece[] nextPieces;
+    static final int nextPiecesLength = 3;
     //#endregion
     
     TetrisPanel(Dimension dimensions){
@@ -43,17 +46,35 @@ public final class TetrisPanel extends JPanel {
         panelWidth = (int)dimensions.getWidth();
         panelHeight = (int)dimensions.getHeight();
         screenRatio = panelWidth/(1920.);
-        startGameTimer();
         try {
             images[0] = ImageIO.read(new File("src\\ProjectFiles\\Images\\tetrisGrid.png"));
             images[1] = ImageIO.read(new File("src\\ProjectFiles\\Images\\tetrisGreyScale.png"));
+            images[2] = ImageIO.read(new File("src\\ProjectFiles\\Images\\tetrisNextPieceGrid.png"));
         } catch (Exception e) {
             System.out.println("Error loading image: " + e.getMessage());
             e.printStackTrace();
         }
         TetrisPiece.sprite = images[1];
         board = new TetrisBoard(images[0], new double[]{panelWidth/2-160,panelHeight/2-320}, 32, new int[]{22,10});
-        generateNextPiece();
+        generateNextPieceGrid();
+        generateNextPieces();
+        activePiece.movePiece(new int[]{4,0});
+        setReferenceFrames();
+        startGameTimer();
+    }
+
+    public void generateNextPieceGrid(){
+        nextPiecesGrid = new ReferenceFrame[nextPiecesLength];
+        for (int i = 0; i < nextPiecesLength; i++) {
+            nextPiecesGrid[i] = new ReferenceFrame(images[2], new double[]{panelWidth/2+192,panelHeight/2-320+i*(160)}, 32);
+        }
+    }
+
+    public void generateNextPieces(){
+        nextPieces = new TetrisPiece[nextPiecesLength];
+        for (int i = 0; i < nextPiecesLength+1; i++) {
+            generateNextPiece();
+        }
     }
 
     // -------------
@@ -153,6 +174,8 @@ public final class TetrisPanel extends JPanel {
         board.addPieceToGrid(activePiece);
         board.clearRows();
         generateNextPiece();
+        activePiece.movePiece(new int[]{4,0});
+        setReferenceFrames();
     }
 
     public static void generateNextPiece(){
@@ -161,7 +184,12 @@ public final class TetrisPanel extends JPanel {
             randomBag = TetrisBag;
         }
         int nextPiece = random.nextInt(randomBag.length);
-        activePiece = new TetrisPiece(randomBag[nextPiece],0, board, new int[]{4,0});
+        activePiece = nextPieces[0];
+        for (int i = 0; i < nextPiecesLength-1; i++) {
+            nextPieces[i] = nextPieces[i+1];
+        }
+        nextPieces[nextPiecesLength-1] = new TetrisPiece(randomBag[nextPiece], 0, nextPiecesGrid[nextPiecesLength-1], new int[]{0,0});
+
         int[] newBag = new int[randomBag.length-1];
         int j = 0;
         for (int i = 0; i < randomBag.length; i++) {
@@ -173,9 +201,20 @@ public final class TetrisPanel extends JPanel {
         randomBag = newBag;
     }
 
+    public static void setReferenceFrames(){
+        activePiece.updateReferenceFrame(board);
+        for (int i = 0; i < nextPiecesLength; i++) {
+            nextPieces[i].updateReferenceFrame(nextPiecesGrid[i]);
+        }
+    }
+
     public void render(Graphics2D g2d) {
         backGround.render(g2d);
         board.render(g2d);
+        for (int i = 0; i < nextPiecesGrid.length; i++) {
+            nextPiecesGrid[i].render(g2d);
+            nextPieces[i].render(g2d);
+        }
         activePiece.render(g2d);
     }
 
