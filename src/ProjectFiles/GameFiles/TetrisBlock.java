@@ -12,6 +12,10 @@ public class TetrisBlock extends SpriteEntity{
         this.reference = reference;
     }
 
+    public ReferenceFrame getReferenceFrame(){
+        return reference;
+    }
+
     public void updateReferenceFrame(ReferenceFrame newFrame){
         reference = newFrame;
     }

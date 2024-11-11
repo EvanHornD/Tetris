@@ -78,10 +78,15 @@ public class TetrisPiece extends RenderableEntity{
     public TetrisPiece(int type, int rotation, ReferenceFrame frame, int[] coords){
         this.blocks = new TetrisBlock[4];
         this.coords = coords;
-        generatePiece(TetrisPieces[type][rotation], frame, type);
-        this.pieceColor = TetrisColors[type];
         this.type = type;
         this.rotation = rotation;
+        if(type<0){
+            blocks = new TetrisBlock[0];
+            pieceColor = new Color(0);
+            return;
+        }
+        generatePiece(TetrisPieces[type][rotation], frame, type);
+        this.pieceColor = TetrisColors[type];
     }
 
     public void generatePiece(int[][] blockCoords, ReferenceFrame frame, int type){
@@ -111,6 +116,10 @@ public class TetrisPiece extends RenderableEntity{
         return this.blocks;
     }
 
+    public ReferenceFrame getReferenceFrame(){
+        return blocks[0].getReferenceFrame();
+    }
+
     public void updateReferenceFrame(ReferenceFrame newFrame){
         for (int i = 0; i < blocks.length; i++) {
             blocks[i].updateReferenceFrame(newFrame);
@@ -123,6 +132,12 @@ public class TetrisPiece extends RenderableEntity{
             int[] gridCoords = new int[]{blockCoords[i][0]+coords[0],blockCoords[i][1]+coords[1]};
             blocks[i].updateGridCoords(gridCoords);
         }
+    }
+
+    public void setCoords(int[] newCoords){
+        this.coords = new int[]{newCoords[0],newCoords[1]};
+        int[][] blockCoords = TetrisPieces[type][rotation];
+        updatepiece(blockCoords);
     }
 
     public void movePiece(int[] newCoords){

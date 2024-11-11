@@ -7,6 +7,7 @@ import ProjectFiles.Rendering.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.Map;
 import java.util.Random;
 import javax.imageio.ImageIO;
@@ -31,10 +32,12 @@ public final class TetrisPanel extends JPanel {
     static boolean state = true;
     static int pieceMoveTimer = 20;
     static ReferenceFrame[] nextPiecesGrid;
+    static StoredPiece storedPieceGrid;
     static TetrisPiece[] nextPieces;
-    static final int nextPiecesLength = 3;
+    static int nextPiecesLength = 3;
     //#endregion
     
+    @SuppressWarnings("CallToPrintStackTrace")
     TetrisPanel(Dimension dimensions){
         this.setPreferredSize(dimensions);
         this.setFocusable(true);
@@ -51,36 +54,24 @@ public final class TetrisPanel extends JPanel {
             images[0] = ImageIO.read(new File("src\\ProjectFiles\\Images\\tetrisGrid.png"));
             images[1] = ImageIO.read(new File("src\\ProjectFiles\\Images\\tetrisGreyScale.png"));
             images[2] = ImageIO.read(new File("src\\ProjectFiles\\Images\\tetrisNextPieceGrid.png"));
-        } catch (Exception e) {
+        } catch (IOException e) {
             System.out.println("Error loading image: " + e.getMessage());
             e.printStackTrace();
         }
         TetrisPiece.sprite = images[1];
         board = new TetrisBoard(images[0], new double[]{panelWidth/2-(6*blockSize),panelHeight/2-(12*blockSize)}, blockSize, new int[]{22,10});
+        storedPieceGrid = new StoredPiece(images[2], new double[]{panelWidth/2-(11*blockSize),panelHeight/2-(10*blockSize)}, blockSize);
+        storedPieceGrid.setStoredPiece(new TetrisPiece(0, 0, storedPieceGrid, new int[]{0,0}));
         generateNextPieceGrid();
         generateNextPieces();
         activePiece.movePiece(new int[]{4,0});
         setReferenceFrames();
+
         startGameTimer();
     }
 
     public void clampScreenRatio(){
-        if(screenRatio<.25){
-            screenRatio=.25;
-            return;
-        }
-        if (screenRatio<.5) {
-            screenRatio=.5;
-            return;
-        }
-        if (screenRatio<.75) {
-            screenRatio=.75;
-            return;
-        }
-        if (screenRatio<1) {
-            screenRatio=1;
-            return;
-        }
+        screenRatio = Math.round(screenRatio*4)/4.;
     }
 
     public void generateNextPieceGrid(){
@@ -157,6 +148,11 @@ public final class TetrisPanel extends JPanel {
         if(keyActions.get("Rotate")==1&&keyFrames.get("Rotate")==1){
             rotatePiece(activePiece.getCoords());
         }
+
+        if(keyActions.get("Store")==1&&keyFrames.get("Store")==1){
+            storePiece();
+        }
+
         if(keyActions.get("QuickDrop")==1&&keyFrames.get("QuickDrop")==1){
             int[] newCoordinates = new int[]{activePiece.getCoords()[0],activePiece.getCoords()[1]+1};
             // check if there was a collision
@@ -230,6 +226,15 @@ public final class TetrisPanel extends JPanel {
         randomBag = newBag;
     }
 
+    public static void storePiece(){
+        activePiece = storedPieceGrid.storePiece(activePiece);
+        if (activePiece.getType()==-1) {
+            generateNextPiece();
+            activePiece.movePiece(new int[]{4,0});
+            setReferenceFrames();
+        }
+    }
+
     public static void setReferenceFrames(){
         activePiece.updateReferenceFrame(board);
         for (int i = 0; i < nextPiecesLength; i++) {
@@ -245,6 +250,7 @@ public final class TetrisPanel extends JPanel {
             nextPiecesGrid[i].render(g2d, screenRatio);
             nextPieces[i].render(g2d, screenRatio);
         }
+        storedPieceGrid.render(g2d, screenRatio);
         activePiece.render(g2d, screenRatio);
     }
 

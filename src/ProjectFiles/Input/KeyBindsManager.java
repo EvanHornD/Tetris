@@ -28,6 +28,7 @@ public final class KeyBindsManager {
 
     public Map<String, Integer> keyActions = new HashMap<>(Map.of(
         "Rotate", 0,
+        "Store",0,
         "QuickDrop",0,
         "Down", 0,
         "Left", 0,
