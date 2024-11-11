@@ -1,9 +1,8 @@
 package ProjectFiles.Rendering;
 
+import ProjectFiles.TetrisPanel;
 import java.awt.Graphics2D;
 import javax.swing.*;
-
-import ProjectFiles.TetrisPanel;
 
 public class GraphicsRenderer {
  

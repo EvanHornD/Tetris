@@ -28,8 +28,8 @@ public class LabeledShapeEntity extends RenderableEntity {
     }
 
     @Override
-    public void render(Graphics2D g2d){
-        shape.render(g2d);
-        text.render(g2d);
+    public void render(Graphics2D g2d, double scale){
+        shape.render(g2d,scale);
+        text.render(g2d,scale);
     }
 }

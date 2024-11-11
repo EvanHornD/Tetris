@@ -7,6 +7,6 @@ public abstract class RenderableEntity implements Renderable {
     }
 
     @Override
-    public abstract void render(Graphics2D g2d);
+    public abstract void render(Graphics2D g2d, double scale);
 }
 

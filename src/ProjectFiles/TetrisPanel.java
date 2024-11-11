@@ -9,9 +9,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Map;
 import java.util.Random;
-
 import javax.imageio.ImageIO;
-
 import javax.swing.*;
 
 public final class TetrisPanel extends JPanel {
@@ -23,6 +21,7 @@ public final class TetrisPanel extends JPanel {
     static int panelWidth;
     static int panelHeight;
     static double screenRatio;
+    static int blockSize = 32;
     static int frameNumber = 0;
     ShapeEntity backGround = new ShapeEntity(new Color(24,24,24));
     BufferedImage[] images = new BufferedImage[3]; 
@@ -45,7 +44,9 @@ public final class TetrisPanel extends JPanel {
         gameTimer = new gameTimer();
         panelWidth = (int)dimensions.getWidth();
         panelHeight = (int)dimensions.getHeight();
-        screenRatio = panelWidth/(1920.);
+        screenRatio = panelHeight/(1080.);
+        clampScreenRatio();
+        blockSize *= screenRatio;
         try {
             images[0] = ImageIO.read(new File("src\\ProjectFiles\\Images\\tetrisGrid.png"));
             images[1] = ImageIO.read(new File("src\\ProjectFiles\\Images\\tetrisGreyScale.png"));
@@ -55,7 +56,7 @@ public final class TetrisPanel extends JPanel {
             e.printStackTrace();
         }
         TetrisPiece.sprite = images[1];
-        board = new TetrisBoard(images[0], new double[]{panelWidth/2-160,panelHeight/2-320}, 32, new int[]{22,10});
+        board = new TetrisBoard(images[0], new double[]{panelWidth/2-(6*blockSize),panelHeight/2-(12*blockSize)}, blockSize, new int[]{22,10});
         generateNextPieceGrid();
         generateNextPieces();
         activePiece.movePiece(new int[]{4,0});
@@ -63,10 +64,29 @@ public final class TetrisPanel extends JPanel {
         startGameTimer();
     }
 
+    public void clampScreenRatio(){
+        if(screenRatio<.25){
+            screenRatio=.25;
+            return;
+        }
+        if (screenRatio<.5) {
+            screenRatio=.5;
+            return;
+        }
+        if (screenRatio<.75) {
+            screenRatio=.75;
+            return;
+        }
+        if (screenRatio<1) {
+            screenRatio=1;
+            return;
+        }
+    }
+
     public void generateNextPieceGrid(){
         nextPiecesGrid = new ReferenceFrame[nextPiecesLength];
         for (int i = 0; i < nextPiecesLength; i++) {
-            nextPiecesGrid[i] = new ReferenceFrame(images[2], new double[]{panelWidth/2+192,panelHeight/2-320+i*(160)}, 32);
+            nextPiecesGrid[i] = new ReferenceFrame(images[2], new double[]{panelWidth/2+(6*blockSize),panelHeight/2-(10*blockSize)+i*(5*blockSize)}, blockSize);
         }
     }
 
@@ -99,7 +119,7 @@ public final class TetrisPanel extends JPanel {
         if(state == false){
             return;
         }
-        runUserInput(activePiece.getCoords());
+        runUserInput();
         // check if the move timer is done
         if (frameNumber%pieceMoveTimer!=0) {
             frameNumber++;
@@ -118,7 +138,7 @@ public final class TetrisPanel extends JPanel {
         frameNumber++;
     }
 
-    public static void runUserInput(int[] currentCoordinates){
+    public static void runUserInput(){
         Map<String, Integer> keyActions = keyBinds.getKeyActions();
         Map<String, Integer> keyFrames = keyBinds.getKeyFrames();
 
@@ -138,7 +158,13 @@ public final class TetrisPanel extends JPanel {
             rotatePiece(activePiece.getCoords());
         }
         if(keyActions.get("QuickDrop")==1&&keyFrames.get("QuickDrop")==1){
-            //while(movePiece(currentCoordinates, 0, 1)){}
+            int[] newCoordinates = new int[]{activePiece.getCoords()[0],activePiece.getCoords()[1]+1};
+            // check if there was a collision
+            while(!board.checkCollision(TetrisPieces[activePiece.getType()][activePiece.getRotation()], newCoordinates)){
+                activePiece.movePiece(new int[]{0,1});
+                newCoordinates = new int[]{activePiece.getCoords()[0],activePiece.getCoords()[1]+1};
+            }
+            addPieceToGrid();
         }
     }
 
@@ -212,13 +238,14 @@ public final class TetrisPanel extends JPanel {
     }
 
     public void render(Graphics2D g2d) {
-        backGround.render(g2d);
-        board.render(g2d);
+        g2d.scale(screenRatio, screenRatio);
+        backGround.render(g2d, screenRatio);
+        board.render(g2d, screenRatio);
         for (int i = 0; i < nextPiecesGrid.length; i++) {
-            nextPiecesGrid[i].render(g2d);
-            nextPieces[i].render(g2d);
+            nextPiecesGrid[i].render(g2d, screenRatio);
+            nextPieces[i].render(g2d, screenRatio);
         }
-        activePiece.render(g2d);
+        activePiece.render(g2d, screenRatio);
     }
 
     @Override

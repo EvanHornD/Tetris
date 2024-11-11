@@ -24,8 +24,8 @@ public class SpriteEntity extends RenderableEntity {
     }
 
     @Override
-    public void render(Graphics2D g2d) {
-        g2d.drawImage(sprite,null, (int)coordinates[0], (int)coordinates[1]);
+    public void render(Graphics2D g2d, double scale) {
+        g2d.drawImage(sprite,null, (int)(coordinates[0]/scale), (int)(coordinates[1]/scale));
     }
 }
 

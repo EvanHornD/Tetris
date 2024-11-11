@@ -1,14 +1,14 @@
 package ProjectFiles.GameFiles;
 
+import ProjectFiles.Rendering.SpriteEntity;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import ProjectFiles.Rendering.SpriteEntity;
 
 public class ReferenceFrame extends SpriteEntity{
 
-    int TileWidth;
+    double TileWidth;
 
-    public ReferenceFrame(BufferedImage Sprite, double[] coordinates, int tileWidth){
+    public ReferenceFrame(BufferedImage Sprite, double[] coordinates, double tileWidth){
         super(Sprite, coordinates);
         this.TileWidth = tileWidth;
     }
@@ -20,7 +20,7 @@ public class ReferenceFrame extends SpriteEntity{
     }
 
     @Override
-    public void render(Graphics2D g2d) {
-        super.render(g2d);
+    public void render(Graphics2D g2d, double scale) {
+        super.render(g2d, scale);
     }
 }

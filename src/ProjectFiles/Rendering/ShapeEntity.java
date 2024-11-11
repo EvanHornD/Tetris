@@ -59,7 +59,7 @@ public class ShapeEntity extends RenderableEntity {
     }
 
     @Override
-    public void render(Graphics2D g2d) {
+    public void render(Graphics2D g2d, double scale) {
         g2d.setColor(color);
         switch (shape) {
             case "Rectangle":

@@ -1,10 +1,9 @@
 package ProjectFiles.GameFiles;
 
+import ProjectFiles.Rendering.RenderableEntity;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-
-import ProjectFiles.Rendering.RenderableEntity;
 
 public class TetrisPiece extends RenderableEntity{
     public static final int[][][][] TetrisPieces = new int[][][][]{
@@ -143,9 +142,9 @@ public class TetrisPiece extends RenderableEntity{
     }
 
     @Override
-    public void render(Graphics2D g2d) {
+    public void render(Graphics2D g2d, double scale) {
         for (int i = 0; i < blocks.length; i++) {
-            blocks[i].render(g2d);
+            blocks[i].render(g2d, scale);
         }
     }
 }

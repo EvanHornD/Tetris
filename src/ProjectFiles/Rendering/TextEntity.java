@@ -59,7 +59,7 @@ public class TextEntity extends RenderableEntity {
     }
 
     @Override
-    public void render(Graphics2D g2d) {
+    public void render(Graphics2D g2d, double scale) {
         g2d.setFont(font);
         g2d.setColor(Color.LIGHT_GRAY);
         int width = 0;

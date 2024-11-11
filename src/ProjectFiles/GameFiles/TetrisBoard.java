@@ -1,7 +1,6 @@
 package ProjectFiles.GameFiles;
 
 import static ProjectFiles.GameFiles.TetrisPiece.TetrisPieces;
-
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
@@ -9,7 +8,7 @@ public class TetrisBoard extends ReferenceFrame{
 
     TetrisBlock[][] Grid;
     long[] gridRows;
-    public TetrisBoard(BufferedImage backGround, double[] coords, int tileWidth, int[] gridDimensions){
+    public TetrisBoard(BufferedImage backGround, double[] coords, double tileWidth, int[] gridDimensions){
         super(backGround, coords, tileWidth);
         this.Grid = new TetrisBlock[gridDimensions[0]][gridDimensions[1]];
         this.gridRows = new long[gridDimensions[0]];
@@ -93,12 +92,12 @@ public class TetrisBoard extends ReferenceFrame{
     }
 
     @Override
-    public void render(Graphics2D g2d) {
-        super.render(g2d);
+    public void render(Graphics2D g2d, double scale) {
+        super.render(g2d, scale);
         for (int i = 0; i < Grid.length; i++) {
             for (int j = 0; j < Grid[i].length; j++) {
                 if (Grid[i][j] != null) {
-                    Grid[i][j].render(g2d);
+                    Grid[i][j].render(g2d, scale);
                 }
             }
         }
