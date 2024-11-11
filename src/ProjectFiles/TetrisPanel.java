@@ -61,7 +61,7 @@ public final class TetrisPanel extends JPanel {
         TetrisPiece.sprite = images[1];
         board = new TetrisBoard(images[0], new double[]{panelWidth/2-(6*blockSize),panelHeight/2-(12*blockSize)}, blockSize, new int[]{22,10});
         storedPieceGrid = new StoredPiece(images[2], new double[]{panelWidth/2-(11*blockSize),panelHeight/2-(10*blockSize)}, blockSize);
-        storedPieceGrid.setStoredPiece(new TetrisPiece(0, 0, storedPieceGrid, new int[]{0,0}));
+        storedPieceGrid.setStoredPiece(new TetrisPiece(-1, 0, storedPieceGrid, new int[]{0,0}));
         generateNextPieceGrid();
         generateNextPieces();
         activePiece.movePiece(new int[]{4,0});
@@ -133,15 +133,15 @@ public final class TetrisPanel extends JPanel {
         Map<String, Integer> keyActions = keyBinds.getKeyActions();
         Map<String, Integer> keyFrames = keyBinds.getKeyFrames();
 
-        if(keyFrames.get("Down")==1||keyFrames.get("Down")%5==1&&keyFrames.get("Down")>11){
+        if(keyFrames.get("Down")==1||keyFrames.get("Down")%2==1&&keyFrames.get("Down")>11){
             movePiece(activePiece.getCoords(), 0, 1);
         }
 
-        if(keyFrames.get("Left")==1||keyFrames.get("Left")%5==1&&keyFrames.get("Left")>11){
+        if(keyFrames.get("Left")==1||keyFrames.get("Left")%2==1&&keyFrames.get("Left")>11){
             movePiece(activePiece.getCoords(), -1, 0);
         }
 
-        if(keyFrames.get("Right")==1||keyFrames.get("Right")%5==1&&keyFrames.get("Right")>11){
+        if(keyFrames.get("Right")==1||keyFrames.get("Right")%2==1&&keyFrames.get("Right")>11){
             movePiece(activePiece.getCoords(), 1, 0);
         }
 

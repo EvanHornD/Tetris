@@ -19,8 +19,10 @@ public class StoredPiece extends ReferenceFrame{
             return activePiece;
         }
         previousPiece = storedPiece;
-        previousPiece.updateReferenceFrame(activePiece.getReferenceFrame());
-        previousPiece.setCoords(new int[]{4,0});
+        if(storedPiece.getType()>-1){
+            previousPiece.updateReferenceFrame(activePiece.getReferenceFrame());
+            previousPiece.setCoords(new int[]{4,0});
+        }
         storedPiece = activePiece;
         storedPiece.updateReferenceFrame(this);
         storedPiece.setCoords(new int[]{0,0});
