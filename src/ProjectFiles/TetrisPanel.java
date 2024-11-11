@@ -122,20 +122,23 @@ public final class TetrisPanel extends JPanel {
         Map<String, Integer> keyActions = keyBinds.getKeyActions();
         Map<String, Integer> keyFrames = keyBinds.getKeyFrames();
 
-        if(keyFrames.get("Down")%5==1){
+        if(keyFrames.get("Down")==1||keyFrames.get("Down")%5==1&&keyFrames.get("Down")>11){
             movePiece(activePiece.getCoords(), 0, 1);
         }
 
-        if(keyFrames.get("Left")%5==1){
+        if(keyFrames.get("Left")==1||keyFrames.get("Left")%5==1&&keyFrames.get("Left")>11){
             movePiece(activePiece.getCoords(), -1, 0);
         }
 
-        if(keyFrames.get("Right")%5==1){
+        if(keyFrames.get("Right")==1||keyFrames.get("Right")%5==1&&keyFrames.get("Right")>11){
             movePiece(activePiece.getCoords(), 1, 0);
         }
 
         if(keyActions.get("Rotate")==1&&keyFrames.get("Rotate")==1){
             rotatePiece(activePiece.getCoords());
+        }
+        if(keyActions.get("QuickDrop")==1&&keyFrames.get("QuickDrop")==1){
+            //while(movePiece(currentCoordinates, 0, 1)){}
         }
     }
 

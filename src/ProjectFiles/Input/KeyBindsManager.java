@@ -18,7 +18,7 @@ public final class KeyBindsManager {
         "A", "Left",
         "RIGHT", "Right",
         "D", "Right",
-        "Space", "QuickDrop",
+        "SPACE", "QuickDrop",
         "Q", "Store"
     ));
 
@@ -28,6 +28,7 @@ public final class KeyBindsManager {
 
     public Map<String, Integer> keyActions = new HashMap<>(Map.of(
         "Rotate", 0,
+        "QuickDrop",0,
         "Down", 0,
         "Left", 0,
         "Right", 0,
