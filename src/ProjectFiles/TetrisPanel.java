@@ -5,6 +5,7 @@ import static ProjectFiles.GameFiles.TetrisPiece.*;
 import ProjectFiles.Input.KeyBindsManager;
 import ProjectFiles.Rendering.*;
 import java.awt.*;
+import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -50,15 +51,7 @@ public final class TetrisPanel extends JPanel {
         screenRatio = panelHeight/(1080.);
         clampScreenRatio();
         blockSize *= screenRatio;
-        try {
-            images[0] = ImageIO.read(new File("src\\ProjectFiles\\Images\\tetrisGrid.png"));
-            images[1] = ImageIO.read(new File("src\\ProjectFiles\\Images\\tetrisGreyScale.png"));
-            images[2] = ImageIO.read(new File("src\\ProjectFiles\\Images\\tetrisNextPieceGrid.png"));
-        } catch (IOException e) {
-            System.out.println("Error loading image: " + e.getMessage());
-            e.printStackTrace();
-        }
-        TetrisPiece.sprite = images[1];
+        getImages();
         board = new TetrisBoard(images[0], new double[]{panelWidth/2-(6*blockSize),panelHeight/2-(12*blockSize)}, blockSize, new int[]{22,10});
         storedPieceGrid = new StoredPiece(images[2], new double[]{panelWidth/2-(11*blockSize),panelHeight/2-(10*blockSize)}, blockSize);
         storedPieceGrid.setStoredPiece(new TetrisPiece(-1, 0, storedPieceGrid, new int[]{0,0}));
@@ -68,6 +61,21 @@ public final class TetrisPanel extends JPanel {
         setReferenceFrames();
 
         startGameTimer();
+    }
+    
+    public void getImages(){
+        try {
+            images[0] = ImageIO.read(new File("src\\ProjectFiles\\Images\\tetrisGrid.png"));
+            images[1] = ImageIO.read(new File("src\\ProjectFiles\\Images\\tetrisGreyScale.png"));
+            images[2] = ImageIO.read(new File("src\\ProjectFiles\\Images\\tetrisNextPieceGrid.png"));
+        } catch (IOException e) {
+            System.out.println("Error loading image: " + e.getMessage());
+            e.printStackTrace();
+        }
+        System.out.println(Integer.toHexString((images[0].getRGB(8,0))));
+        ColorSpace colorSpace = images[0].getColorModel().getColorSpace();
+        System.out.println("Color Space: " + colorSpace.getType());
+        TetrisPiece.sprite = images[1];
     }
 
     public void clampScreenRatio(){

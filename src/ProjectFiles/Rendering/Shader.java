@@ -1,5 +1,11 @@
 package ProjectFiles.Rendering;
 
-public class Shader {
+import java.awt.image.BufferedImage;
 
+public abstract class Shader {
+
+    Shader(BufferedImage image){
+    }
+
+    public abstract BufferedImage applyShaders();
 }
