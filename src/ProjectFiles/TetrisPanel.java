@@ -264,6 +264,7 @@ public final class TetrisPanel extends JPanel {
     }
 
     static BufferedImage finalImage;
+    static boolean CRTShaderOn = true;
     public void render(Graphics2D g2d) {
         if(changeMade){
             BufferedImage preShaders = new BufferedImage(panelWidth, panelHeight, BufferedImage.TYPE_3BYTE_BGR);
@@ -277,8 +278,12 @@ public final class TetrisPanel extends JPanel {
             }
             storedPieceGrid.render(g2DBuffer, screenRatio);
             activePiece.render(g2DBuffer, screenRatio);
-            crtShader.setImage(preShaders);
-            finalImage = crtShader.applyShaders();
+            if(CRTShaderOn){
+                crtShader.setImage(preShaders);
+                finalImage = crtShader.applyShaders();
+            } else {
+                finalImage = preShaders;
+            }
             changeMade = false;
         }
         g2d.drawImage(finalImage, null, 0, 0);
