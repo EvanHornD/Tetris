@@ -1,7 +1,6 @@
 package ProjectFiles.GameFiles;
 
 import ProjectFiles.Rendering.RenderableEntity;
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
@@ -44,14 +43,14 @@ public class TetrisPiece extends RenderableEntity{
         {{1,0},{0,1},{1,1},{0,2}}}
     };
 
-    public static final Color[] TetrisColors = {
-        new Color(0xffff00ff), // O Piece
-        new Color(0x00ffffff), // I Piece
-        new Color(0x800080ff), // T Piece
-        new Color(0xff7f00ff), // L Piece
-        new Color(0x0000ffff), // J Piece
-        new Color(0x00ff00ff), // S Piece 
-        new Color(0xff0000ff)  // Z Piece
+    public static final int[] TetrisColors = {
+        0xffff8000, // O Piece
+        0xff00ffff, // I Piece
+        0xff800080, // T Piece
+        0xffffff00, // L Piece
+        0xff0000ff, // J Piece
+        0xff00ff00, // S Piece 
+        0xffff0000  // Z Piece
     };
 
     public static final int OPiece = 0, IPiece = 1, TPiece = 2, LPiece = 3, JPiece = 4 , SPiece = 5, ZPiece = 6;
@@ -66,11 +65,10 @@ public class TetrisPiece extends RenderableEntity{
         ZPiece
     };
 
-    public static BufferedImage sprite;
+    public static BufferedImage[] TetrisBlocks;
 
     private int[] coords;
     private TetrisBlock[] blocks;
-    private Color pieceColor;
     private int rotation;
     private int type;
     
@@ -82,22 +80,16 @@ public class TetrisPiece extends RenderableEntity{
         this.rotation = rotation;
         if(type<0){
             blocks = new TetrisBlock[0];
-            pieceColor = new Color(0);
             return;
         }
         generatePiece(TetrisPieces[type][rotation], frame, type);
-        this.pieceColor = TetrisColors[type];
     }
 
     public void generatePiece(int[][] blockCoords, ReferenceFrame frame, int type){
         for (int i = 0; i < blockCoords.length; i++) {
             int[] gridCoords = new int[]{blockCoords[i][0]+coords[0],blockCoords[i][1]+coords[1]};
-            blocks[i] = new TetrisBlock(sprite, frame, gridCoords, type);
+            blocks[i] = new TetrisBlock(TetrisBlocks[type], frame, gridCoords, type);
         }
-    }
-
-    public Color getColor(){
-        return this.pieceColor;
     }
 
     public int getType(){

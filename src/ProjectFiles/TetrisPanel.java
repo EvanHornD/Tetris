@@ -5,7 +5,6 @@ import static ProjectFiles.GameFiles.TetrisPiece.*;
 import ProjectFiles.Input.KeyBindsManager;
 import ProjectFiles.Rendering.*;
 import java.awt.*;
-import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -25,10 +24,11 @@ public final class TetrisPanel extends JPanel {
     static double screenRatio;
     static int blockSize = 32;
     static int frameNumber = 0;
-    ShapeEntity backGround = new ShapeEntity(new Color(24,24,24));
+    ShapeEntity backGround;
     BufferedImage[] images = new BufferedImage[3]; 
     static TetrisBoard board;
     static TetrisPiece activePiece;
+    static CRTShader crtShader = new CRTShader();
     static int[] randomBag = TetrisBag;
     static boolean state = true;
     static int pieceMoveTimer = 20;
@@ -36,6 +36,7 @@ public final class TetrisPanel extends JPanel {
     static StoredPiece storedPieceGrid;
     static TetrisPiece[] nextPieces;
     static int nextPiecesLength = 3;
+    static boolean changeMade = true;
     //#endregion
     
     @SuppressWarnings("CallToPrintStackTrace")
@@ -51,7 +52,9 @@ public final class TetrisPanel extends JPanel {
         screenRatio = panelHeight/(1080.);
         clampScreenRatio();
         blockSize *= screenRatio;
+        this.backGround = new ShapeEntity("Rectangle",new double[]{0,0}, new int[]{panelWidth,panelHeight},new Color(24,24,24));
         getImages();
+        TetrisPiece.TetrisBlocks = colorizeTetrisBlocks();
         board = new TetrisBoard(images[0], new double[]{panelWidth/2-(6*blockSize),panelHeight/2-(12*blockSize)}, blockSize, new int[]{22,10});
         storedPieceGrid = new StoredPiece(images[2], new double[]{panelWidth/2-(11*blockSize),panelHeight/2-(10*blockSize)}, blockSize);
         storedPieceGrid.setStoredPiece(new TetrisPiece(-1, 0, storedPieceGrid, new int[]{0,0}));
@@ -72,10 +75,16 @@ public final class TetrisPanel extends JPanel {
             System.out.println("Error loading image: " + e.getMessage());
             e.printStackTrace();
         }
-        System.out.println(Integer.toHexString((images[0].getRGB(8,0))));
-        ColorSpace colorSpace = images[0].getColorModel().getColorSpace();
-        System.out.println("Color Space: " + colorSpace.getType());
-        TetrisPiece.sprite = images[1];
+    }
+
+    public BufferedImage[] colorizeTetrisBlocks(){
+        BufferedImage[] TetrisBlocks = new BufferedImage[7];
+        ColorizerShader colorizer = new ColorizerShader(images[1]);
+        for (int i = 0; i < TetrisColors.length; i++) {
+            colorizer.setColor(TetrisColors[i]);
+            TetrisBlocks[i] = colorizer.applyShaders();
+        }
+        return TetrisBlocks;
     }
 
     public void clampScreenRatio(){
@@ -155,10 +164,12 @@ public final class TetrisPanel extends JPanel {
 
         if(keyActions.get("Rotate")==1&&keyFrames.get("Rotate")==1){
             rotatePiece(activePiece.getCoords());
+            changeMade = true;
         }
 
         if(keyActions.get("Store")==1&&keyFrames.get("Store")==1){
             storePiece();
+            changeMade = true;
         }
 
         if(keyActions.get("QuickDrop")==1&&keyFrames.get("QuickDrop")==1){
@@ -169,6 +180,7 @@ public final class TetrisPanel extends JPanel {
                 newCoordinates = new int[]{activePiece.getCoords()[0],activePiece.getCoords()[1]+1};
             }
             addPieceToGrid();
+            changeMade = true;
         }
     }
 
@@ -189,6 +201,7 @@ public final class TetrisPanel extends JPanel {
     public static boolean movePiece(int[] currentCoordinates,int x, int y){
         // get coordinates of the moved piece
         int[] newCoordinates = new int[]{currentCoordinates[0]+x,currentCoordinates[1]+y};
+        changeMade = true;
 
         // check if there was a collision
         if(!board.checkCollision(TetrisPieces[activePiece.getType()][activePiece.getRotation()], newCoordinates)){
@@ -250,16 +263,25 @@ public final class TetrisPanel extends JPanel {
         }
     }
 
+    static BufferedImage finalImage;
     public void render(Graphics2D g2d) {
-        g2d.scale(screenRatio, screenRatio);
-        backGround.render(g2d, screenRatio);
-        board.render(g2d, screenRatio);
-        for (int i = 0; i < nextPiecesGrid.length; i++) {
-            nextPiecesGrid[i].render(g2d, screenRatio);
-            nextPieces[i].render(g2d, screenRatio);
+        if(changeMade){
+            BufferedImage preShaders = new BufferedImage(panelWidth, panelHeight, BufferedImage.TYPE_3BYTE_BGR);
+            Graphics2D g2DBuffer = preShaders.createGraphics();
+            g2DBuffer.scale(screenRatio, screenRatio);
+            backGround.render(g2DBuffer, screenRatio);
+            board.render(g2DBuffer, screenRatio);
+            for (int i = 0; i < nextPiecesGrid.length; i++) {
+                nextPiecesGrid[i].render(g2DBuffer, screenRatio);
+                nextPieces[i].render(g2DBuffer, screenRatio);
+            }
+            storedPieceGrid.render(g2DBuffer, screenRatio);
+            activePiece.render(g2DBuffer, screenRatio);
+            crtShader.setImage(preShaders);
+            finalImage = crtShader.applyShaders();
+            changeMade = false;
         }
-        storedPieceGrid.render(g2d, screenRatio);
-        activePiece.render(g2d, screenRatio);
+        g2d.drawImage(finalImage, null, 0, 0);
     }
 
     @Override
