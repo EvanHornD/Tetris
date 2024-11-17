@@ -1,4 +1,4 @@
-package ProjectFiles.GameFiles;
+package ProjectFiles.Input;
 
 
 import javax.swing.*;
