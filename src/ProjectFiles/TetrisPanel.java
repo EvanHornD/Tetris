@@ -3,6 +3,7 @@ package ProjectFiles;
 import ProjectFiles.GameFiles.*;
 import static ProjectFiles.GameFiles.TetrisPiece.*;
 import ProjectFiles.Input.KeyBindsManager;
+import ProjectFiles.Input.gameTimer;
 import ProjectFiles.Rendering.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -147,7 +148,6 @@ public final class TetrisPanel extends JPanel {
     }
 
     public static void runUserInput(){
-        Map<String, Integer> keyActions = keyBinds.getKeyActions();
         Map<String, Integer> keyFrames = keyBinds.getKeyFrames();
 
         if(keyFrames.get("Down")==1||keyFrames.get("Down")%2==1&&keyFrames.get("Down")>11){
@@ -162,17 +162,17 @@ public final class TetrisPanel extends JPanel {
             movePiece(activePiece.getCoords(), 1, 0);
         }
 
-        if(keyActions.get("Rotate")==1&&keyFrames.get("Rotate")==1){
+        if(keyFrames.get("Rotate")==1){
             rotatePiece(activePiece.getCoords());
             changeMade = true;
         }
 
-        if(keyActions.get("Store")==1&&keyFrames.get("Store")==1){
+        if(keyFrames.get("Store")==1){
             storePiece();
             changeMade = true;
         }
 
-        if(keyActions.get("QuickDrop")==1&&keyFrames.get("QuickDrop")==1){
+        if(keyFrames.get("QuickDrop")==1){
             int[] newCoordinates = new int[]{activePiece.getCoords()[0],activePiece.getCoords()[1]+1};
             // check if there was a collision
             while(!board.checkCollision(TetrisPieces[activePiece.getType()][activePiece.getRotation()], newCoordinates)){

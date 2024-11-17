@@ -26,7 +26,7 @@ public final class KeyBindsManager {
         "BUTTON1", "Input"
     ));
 
-    public Map<String, Integer> keyActions = new HashMap<>(Map.of(
+    public Map<String, Integer> keyFrames = new HashMap<>(Map.of(
         "Rotate", 0,
         "Store",0,
         "QuickDrop",0,
@@ -35,11 +35,8 @@ public final class KeyBindsManager {
         "Right", 0,
         "Input", 0
     ));
-    public Map<String, Integer> keyFrames = new HashMap<>();
 
     public int[] mouseCoords = {0,0};
-
-
 
     public KeyBindsManager(JComponent component) {
         this.keyBoard = new KeyBoardManager(component,this);
@@ -48,7 +45,7 @@ public final class KeyBindsManager {
     }
 
     public void setDefaultKeyBindings() {
-        for (Map.Entry<String, Integer> entry : keyActions.entrySet()) {
+        for (Map.Entry<String, Integer> entry : keyFrames.entrySet()) {
             keyBoard.addNewAction(entry.getKey());
             mouse.addNewAction(entry.getKey());
         }
@@ -62,18 +59,14 @@ public final class KeyBindsManager {
 
 
     public Object[][] getInformation(){
-        Object[][] ActionSet = new Object[keyActions.size()][];
+        Object[][] ActionSet = new Object[keyFrames.size()][];
         int actionNum = 0;
-        for (Map.Entry<String,Integer> action : keyActions.entrySet()) {
+        for (Map.Entry<String,Integer> action : keyFrames.entrySet()) {
             String actionName = action.getKey();
-            ActionSet[actionNum] = new Object[]{actionName,action.getValue(),keyFrames.get(actionName)};
+            ActionSet[actionNum] = new Object[]{actionName,action.getValue()};
             actionNum++;
         }
         return ActionSet;
-    }
-
-    public Map<String, Integer> getKeyActions(){
-        return this.keyActions;
     }
 
     public Map<String, Integer> getKeyFrames(){
@@ -81,20 +74,14 @@ public final class KeyBindsManager {
     }
 
     public void updateFrameInformation(){
-        Object[][] Actions = getInformation();
-        for (Object[] Action : Actions) {
-            String actionName = (String)Action[0];
-            Integer actionState = (Integer)Action[1];
-            Integer actionFrameState = (Integer)Action[2];
-            switch (actionState) {
-                case 1 -> {
-                    actionFrameState++;
-                    keyFrames.replace(actionName, actionFrameState);
-                }
-                case 2 -> {
-                    keyFrames.replace(actionName,0);
-                    keyActions.replace(actionName,0);
-                }
+        for (Map.Entry<String,Integer> action : keyFrames.entrySet()) {
+            String actionName = action.getKey();
+            Integer actionState = action.getValue();
+            if(actionState>0){
+                actionState++;
+                keyFrames.replace(actionName,actionState);
+            } else if(actionState==-1){
+                keyFrames.replace(actionName,0);
             }
         }
     }

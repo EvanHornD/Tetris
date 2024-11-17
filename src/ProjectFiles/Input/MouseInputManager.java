@@ -55,8 +55,8 @@ public class MouseInputManager {
 
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (keyBinds.keyActions.get(action) == 0) {
-                        keyBinds.keyActions.replace(action, 1);
+                    if (keyBinds.keyFrames.get(action) == 0) {
+                        keyBinds.keyFrames.replace(action, 1);
                     }
                 }
             };
@@ -66,7 +66,7 @@ public class MouseInputManager {
 
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    keyBinds.keyActions.replace(action, 2);
+                    keyBinds.keyFrames.replace(action, 2);
                 }
             };
         keyBinds.keyFrames.put(actionName, 0);
